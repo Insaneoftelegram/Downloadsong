@@ -1,13 +1,1 @@
-tgcrypto
-pyrogram
-eyeD3
-lyricsgenius
-requests
-spotipy
-youtube_dl
-youtube_search
-python-telegram-bot
-requests
 telebot
-YouTube
-pytube
