@@ -11,7 +11,7 @@ def send_welcome(message):
 @bot.message_handler(func=lambda message: True)
 def download_song(message):
     song_name = message.text
-    download_url = f'https://api.example.com/download?song={song_name}'
+    download_url = f'https://youtube.com/download?song={song_name}'
     response = requests.get(download_url)
     if response.status_code == 200:
         bot.send_audio(message.chat.id, response.content)
