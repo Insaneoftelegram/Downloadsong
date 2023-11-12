@@ -1,47 +1,21 @@
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+import telebot
+import requests
 
-API_ID = "5642193"
-API_HASH = "c28fc9ac88530587236175da89184d75"
-BOT_TOKEN = "6088570842:AAEP-Stzkhzj53aijcDOeDbhs-hZo9qjeLU"
+TOKEN = 'your_telegram_bot_token'
+bot = telebot.TeleBot(TOKEN)
 
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    bot.reply_to(message, "Welcome to the Song Download Bot! Just send me the name of the song you want to download.")
 
-INSANE = Client(
-    name="insane test bot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN
-)
+@bot.message_handler(func=lambda message: True)
+def download_song(message):
+    song_name = message.text
+    download_url = f'https://api.example.com/download?song={song_name}'
+    response = requests.get(download_url)
+    if response.status_code == 200:
+        bot.send_audio(message.chat.id, response.content)
+    else:
+        bot.reply_to(message, "Sorry, I couldn't find the song you requested.")
 
-START_BUTTONS =[[
-    InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ ʏᴏᴜʀ ɢʀᴏᴜᴘ", url="https://t.me/Resso_offical_bot?startgroup=true")
-    ],[
-    InlineKeyboardButton("ᴄʜᴀɴɴᴇʟ", url="t.me/INSANEX3"),
-    InlineKeyboardButton("sᴜᴘᴘᴏʀᴛ", url="https://t.me/RESSO_SUPPORT")
-    ]]
-
-@INSANE.on_message(filters.command("start"))
-async def start_cmd(Client, message):
-    await message.reply_photo(
-        photo="https://telegra.ph/file/da545a93169c6e91d4c98.jpg",
-        caption="ʜᴇʏ, \n \n \n ɪ'ᴍ ᴀ ᴛᴇʟᴇɢʀᴀᴍ sᴛʀᴇᴀᴍɪɴɢ ʙᴏᴛ ᴡɪᴛʜ sᴏᴍᴇ ᴜsᴇғᴜʟ ғᴇᴀᴛᴜʀᴇ. sᴜᴘᴘᴏʀᴛɪɴɢ ᴘʟᴀᴛғᴏʀᴍs ʟɪᴋᴇ ʏᴏᴜᴛᴜʙᴇ,ʀᴇssᴏ....ᴇᴛᴄ \n \n A ᴘᴏᴡᴇғᴜʟ ᴍᴜsɪᴄ ᴘʟᴀʏᴇʀ ʙᴏᴛ ᴡɪᴛʜ sᴏᴍᴇ ᴀᴡᴇsᴏᴍᴇ ᴀɴᴅ ᴜsᴇғᴜʟ ғᴇᴀᴛᴜʀᴇs.\n maintenance work loading..........",
-        reply_markup =InlineKeyboardMarkup (START_BUTTONS)
-  
-    )
-    
-INSANE_BUTTONS =[[
-    InlineKeyboardButton("Owner", url="https://t.me/insanex3")
-    ]]
-    
-@INSANE.on_message(filters.command("owner"))
-async def owner_cmd(client, message):
-    await message.reply_photo(
-        photo="https://telegra.ph/file/a42e0a1e09e4ca442fe3b.jpg",
-        reply_markup =InlineKeyboardMarkup (INSANE_BUTTONS)
-    )
-
-    
- 
-print("INSANE Bot started ")
-INSANE.run()
-
+bot.polling()
