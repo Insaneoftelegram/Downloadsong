@@ -9,3 +9,5 @@ youtube_search
 python-telegram-bot
 requests
 telebot
+YouTube
+pytube
