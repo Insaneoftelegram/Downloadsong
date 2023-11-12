@@ -1,21 +1,32 @@
 import telebot
-import requests
+from pytube import YouTube
 
+# Telegram Bot Token
 TOKEN = '5021398357:AAE62C4x-jptJ3S2gLpuHvrXru6xM5yIAaQ'
+
+# Initialize Telegram Bot
 bot = telebot.TeleBot(TOKEN)
 
+# Handler for /start command
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Welcome to the Song Download Bot! Just send me the name of the song you want to download.")
+    bot.reply_to(message, 'Welcome to the YouTube Song Downloader Bot!')
 
-@bot.message_handler(func=lambda message: True)
+# Handler for /download command
+@bot.message_handler(commands=['download'])
 def download_song(message):
-    song_name = message.text
-    download_url = f'https://youtube.com/download?song={song_name}'
-    response = requests.get(download_url)
-    if response.status_code == 200:
-        bot.send_audio(message.chat.id, response.content)
-    else:
-        bot.reply_to(message, "Sorry, I couldn't find the song you requested.")
+    # Get the YouTube video URL from the message
+    url = message.text.split(' ')[1]
 
+    try:
+        # Download the YouTube video
+        video = YouTube(url)
+        audio = video.streams.filter(only_audio=True).first()
+        audio.download()
+
+        bot.reply_to(message, 'Song downloaded successfully!')
+    except Exception as e:
+        bot.reply_to(message, f'Error: {str(e)}')
+
+# Start the Telegram Bot
 bot.polling()
