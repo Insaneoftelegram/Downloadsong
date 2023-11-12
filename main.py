@@ -1,7 +1,7 @@
 import telebot
 import requests
 
-TOKEN = 'your_telegram_bot_token'
+TOKEN = '5021398357:AAE62C4x-jptJ3S2gLpuHvrXru6xM5yIAaQ'
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
